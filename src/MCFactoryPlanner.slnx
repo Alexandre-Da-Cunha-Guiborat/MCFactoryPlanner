@@ -1,0 +1,27 @@
+<Solution>
+    <Folder Name="/00-Solution/">
+        <File Path=".editorconfig" />
+        <File Path="Directory.Packages.props" />
+        <File Path="nuget.config" />
+    </Folder>
+    <Folder Name="/10-Common/">
+        <Project Path="10-Common/MCFP.Common/MCFP.Common.csproj" />
+    </Folder>
+    <Folder Name="/20-Bll/">
+    </Folder>
+    <Folder Name="/30-Engine/">
+    </Folder>
+    <Folder Name="/40-Service/">
+    </Folder>
+    <Folder Name="/50-App/">
+    </Folder>
+    <Folder Name="/60-Demo/">
+        <Project Path="60-Demo/MCFP.Console.Demo/MCFP.Console.Demo.csproj" Id="2d6acb35-3709-4079-a9e0-1ba9e7030370" />
+    </Folder>
+    <Folder Name="/70-Test/">
+    </Folder>
+    <Folder Name="/80-Doc/">
+    </Folder>
+    <Folder Name="/90-Script/">
+    </Folder>
+</Solution>

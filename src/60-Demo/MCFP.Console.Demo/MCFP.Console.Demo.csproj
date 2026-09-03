@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup Label="Project_Information">
+        <Authors>Alexandre DA CUNHA</Authors>
+        <Company>TBD</Company>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Package_Information">
+        <TargetFramework>net10.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Configurations>Release;Debug</Configurations>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Package_Information">
+        <IsPackable>false</IsPackable>
+        <PackageId>MCPF.Console.Demo</PackageId>
+        <Version>$(MCPFVersion)</Version>
+        <Description>Tiny console demo app for MCFP.</Description>
+    </PropertyGroup>
+
+    <ItemGroup Label="Release_Dependencies" Condition="'$(Configuration)' == 'Release'">
+    </ItemGroup>
+
+    <ItemGroup Label="Debug_Dependencies" Condition="'$(Configuration)' == 'Debug'">
+        <ProjectReference Include="..\..\10-Common\MCFP.Common\MCFP.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Processor\**" />
+      <EmbeddedResource Remove="Processor\**" />
+      <None Remove="Processor\**" />
+    </ItemGroup>
+
+    <ItemGroup Label="Misc">
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>MCPF.Console.Demo.Test</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Energies\" />
+    </ItemGroup>
+</Project>
