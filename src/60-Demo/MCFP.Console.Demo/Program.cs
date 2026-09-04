@@ -40,7 +40,7 @@ internal class Program
         Dictionary<IRecipeOutput, IEnergyGenerator> ironPlateProductionGeneratorMappings = new Dictionary<IRecipeOutput, IEnergyGenerator>() { { charcoalProduction.Recipe.Outputs.Last(), euGenerator } };
         FactoryComponent ironPlateProduction = new FactoryComponent("ironPlateProduction", ironPlateRecipe, [ironIngotProduction, charcoalProduction], ironPlateProductionRecipeMappings, [euGenerator]);
 
-        Factory ironPlateFactory = new Factory("ironPlateFactory", [woodProduction, charcoalProduction, ironOreProduction, ironIngotProduction, ironPlateProduction, ironPlateProduction]);
+        Factory ironPlateFactory = new Factory("ironPlateFactory", [woodProduction, charcoalProduction, ironOreProduction, ironIngotProduction, ironPlateProduction]);
 
         Test(woodProduction);
         Test(ironOreProduction);
@@ -92,7 +92,40 @@ internal class Program
             }
         }
 
-        IEnumerable<String> resourceRatioPrintable = resourceRatioInOut.Select(r => $"{r.Key} : {(Single)r.Value.amountOut} / {r.Value.amountIn}");
+        Dictionary<IResourceId, IEnergy> generatedEnergies = [];
+        IEnumerable<IEnergyGenerator> generators = factory.Components.SelectMany(c => c.EnergyGenerators);
+        foreach (IEnergyGenerator generator in generators)
+        {
+            foreach (IFactoryComponent genInput in generator.Inputs)
+            {
+                IEnumerable<(IResource resource, UInt64 Amount)> resourceInput = genInput.Recipe.Outputs.Select(o => (o.Resource, o.Amount));
+                IEnumerable<(IResourceId resourceId, IEnergy energy)> generated = resourceInput.Select(rInput => (rInput.resource.Id, generator.GenerateEnergy(rInput.resource, rInput.Amount)));
+
+                foreach ((IResourceId resourceId, IEnergy energy) gen in generated)
+                {
+                    if (generatedEnergies.ContainsKey(gen.resourceId))
+                    {
+                        generatedEnergies[gen.resourceId] = gen.energy; // ! TODO : This is wrong in it self. Need to sum up the total energy produced
+                    }
+                    else
+                    {
+                        generatedEnergies.Add(gen.resourceId, gen.energy);
+                    }
+                }
+
+            }
+        }
+
+        List<String> resourceRatioPrintable = [];
+        foreach (KeyValuePair<IResourceId, (UInt64 amountIn, UInt64 amountOut)> r in resourceRatioInOut)
+        {
+            resourceRatioPrintable.Add($"{r.Key} : {(Single)r.Value.amountOut} / {r.Value.amountIn}");
+        }
+
+        foreach (KeyValuePair<IResourceId, IEnergy> g in generatedEnergies)
+        {
+            resourceRatioPrintable.Add($"{g.Key} : {g.Value.TotalEnergy}");
+        }
         Console.WriteLine($"[{String.Join(", ", resourceRatioPrintable)}]");
     }
 }
